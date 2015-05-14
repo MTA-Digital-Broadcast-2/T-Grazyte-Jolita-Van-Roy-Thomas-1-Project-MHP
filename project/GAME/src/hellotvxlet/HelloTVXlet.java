@@ -8,6 +8,8 @@ import org.havi.ui.event.*;
 import org.dvb.event.*;
 import java.util.Timer;
 import org.dvb.ui.DVBColor;
+import java.lang.Object;
+import java.util.Random;
 
 public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
      
@@ -15,9 +17,11 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     private MijnImage bckgr;    
     private HScene scene;
     private Text name;
-    private Block block, block1, block2;
+    private Block block;
+    private String direction = "up";
     
     private Block[] blockjes;
+    private Color[] Colors;
     private Bal bal;
     private int balY;
     private HStaticText level;
@@ -43,28 +47,53 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         bckgr = new MijnImage("bckgr.jpg", 0, 0); 
         name = new Text(scene.getWidth()-150, 0, 200, 30, "Scores: 0");
         
-        blockjes = new Block[12];
-        blockjes[0] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 0, 10, 70, 20, Color.red);
-        blockjes[1] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 72, 10, 70, 20, Color.blue);
-        blockjes[2] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 144, 10, 70, 20, Color.green);
-        blockjes[3] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 216, 10, 70, 20, Color.white);
+        blockjes = new Block[16];
+        Colors = new Color[10];
         
-        for(int i = 1; i<= blockjes.length; i++){
+        Colors[0] = Color.red;
+        Colors[1] = Color.blue;
+        Colors[2] = Color.yellow;
+        Colors[3] = Color.pink;
+        Colors[4] = Color.cyan;
+        Colors[5] = Color.gray;
+        Colors[6] = Color.orange;
+        Colors[7] = Color.magenta;
+        Colors[8] = Color.white;
+        Colors[9] = Color.green;
+        
+        Random random = new Random();
+        for(int i = 0; i< 16; i++){
+            int randomNumber = random.nextInt(Colors.length);
             
-           //blockjes[i] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 0, 10, 70, 20, Color.red);
-            System.out.println("for lus nr:"+i);
+            Color randomColor = Colors[randomNumber];
+            
+            if(i < 4)
+            {
+                blockjes[i] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 0+72*i, 40, 70, 20, randomColor);
+            }
+            else
+            {
+                if(i < 8)
+                {
+                    blockjes[i] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 0+72*(i-4), 62, 70, 20, randomColor);
+                }
+                else
+                {
+                    if(i < 12)
+                    {
+                        blockjes[i] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 0+72*(i-8), 84, 70, 20, randomColor);
+                    }
+                    else
+                    {
+                        blockjes[i] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 0+72*(i-12), 108, 70, 20, randomColor);
+                    }
+                }
+            }       
+            randomNumber = 0;
         }
 
         block = new Block(0, 550, scene.getWidth(), scene.getHeight(), 0, 5, 100, 20, Color.red);
         bal = new Bal(0, 0, scene.getWidth(), scene.getHeight());
-        
-        block1 = new Block(0, 0, scene.getWidth(), scene.getHeight(), 290, 10, 70, 20, Color.yellow);
-        block2 = new Block(0, 0, scene.getWidth(), scene.getHeight(), 362, 10, 70, 20, Color.black);
-        
-        
-        //mIMG1 = new MijnImage("spaceship.png",300,200);
-        //mIMG2 = new MijnImage("spaceship.png",200,300);
-        //mIMG3 = new MijnImage("spaceship.png",300,300);
         
         startKnop.setLocation(250, 300);
         startKnop.setSize(100, 50 );
@@ -84,13 +113,17 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         scene.add(bckgr);
         scene.add(block);
         scene.add(bal);
-        scene.add(block1);
-        scene.add(block2);
         
-        scene.add(blockjes[0]);
-        scene.add(blockjes[1]);
-        scene.add(blockjes[2]);
-        scene.add(blockjes[3]);
+        for(int i = 0;i<blockjes.length;i++)
+        {
+            if(blockjes[i].isAlive = true)
+            {
+                scene.add(blockjes[i]); 
+            }
+        }
+        
+        
+        
         scene.add(name);
         
         scene.add(startKnop);
@@ -101,13 +134,15 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         //scene.add(mIMG2);
         //scene.add(mIMG3);
         
-        scene.popToFront(blockjes[0]);
-        scene.popToFront(blockjes[1]);
-        scene.popToFront(blockjes[2]);
-        scene.popToFront(blockjes[3]);
+        for(int i = 0;i<blockjes.length;i++)
+        {
+            if(blockjes[i].isAlive = true)
+            {
+                scene.popToFront(blockjes[i]); 
+            }
+        }
+        
         scene.popToFront(block);
-        scene.popToFront(block1);
-        scene.popToFront(block2);
         scene.popToFront(bal);
         scene.popToFront(name);
         
@@ -150,9 +185,36 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     }
     
     public void callback(){
+       for(int i = 0; i < blockjes.length; i++)
+       {
+           if(bal.getXpos() >= blockjes[i].getXpos() && bal.getXpos() <= (blockjes[i].getXpos() + blockjes[i].getwidth()))
+           {
+               if(bal.getYpos() <= blockjes[i].getYpos() + blockjes[i].getheight())
+               {
+                   if(direction == "up")
+                   {
+                       direction = "down";
+                   }
+                   else
+                   {
+                       direction = "up";
+                   }
+                   blockjes[i].killBlock();
+                   scene.remove(blockjes[i]);
+               }
+               
+           }
+       }
        
-       balY -= 20;
-       if(balY == 0) balY++;
+       if(direction == "up")
+       {
+            balY -= 15;
+       }
+       else
+       {
+           balY += 15;
+       }
+       
        bal.Verplaats(0, balY);
        
     }

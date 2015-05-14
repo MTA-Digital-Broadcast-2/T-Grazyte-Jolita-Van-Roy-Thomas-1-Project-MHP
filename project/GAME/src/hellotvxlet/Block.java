@@ -18,6 +18,7 @@ import java.util.Random;
 public class Block extends HComponent{
    
     int xPos, yPos, blockW, blockH;
+    boolean isAlive;
     Color color;
     
     //Plaats en locatie instellen in de constructor
@@ -26,6 +27,7 @@ public class Block extends HComponent{
         this.yPos = yPos;
         this.blockW = blockW;
         this.blockH = blockH;
+        this.isAlive = true;
         
         this.color = initColor;
         this.setBounds(posX, posY, width, height);
@@ -42,5 +44,26 @@ public class Block extends HComponent{
         g.fillRect(xPos, yPos, blockW, blockH);
         
     }
-
+    
+    public int getXpos()
+    {
+        return this.xPos;
+    }
+    
+    public int getYpos(){
+        return this.yPos;
+    }
+    
+    public int getwidth()
+    {
+        return this.blockW;
+    }
+    
+    public int getheight(){
+        return this.blockH;
+    }
+    
+    public void killBlock(){
+        this.isAlive = false;
+    }
 }
