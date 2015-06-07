@@ -9,7 +9,7 @@ import java.util.TimerTask;
 
 /**
  *
- * @author student
+ * @author student Jolita Grazyte
  */
 public class MijnTimer extends TimerTask{
     HelloTVXlet xlet;
@@ -21,7 +21,7 @@ public class MijnTimer extends TimerTask{
     
     public void run()
     {
-        System.out.println("Tick");
+        //System.out.println("Tick");
         xlet.callback();
     }
 }

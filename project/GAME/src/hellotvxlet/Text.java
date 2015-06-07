@@ -13,7 +13,7 @@ import org.dvb.ui.*;
 //Klasse van HComponent overerven
 public class Text extends HComponent{
    
-    public String text = "Sound Gallery";
+    public String text = "";
     
     public Text(int X, int Y, int H, int W, String text)
     {

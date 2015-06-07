@@ -6,12 +6,10 @@ package hellotvxlet;
 
 import org.havi.ui.*;
 import java.awt.*;
-import org.dvb.ui.*;
-import java.util.Random;
 
 
 /**
- * Oefening Blz 44: MijnComponent
+ * 
  * @author student: Jolita Grazyte
  */
 //Klasse van HComponent overerven
