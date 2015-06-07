@@ -24,15 +24,12 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     private Random random;
     private HStaticText level;
     private HTextButton pauseKnop, startKnop;
-    int xa, ya;
-    int step = 10;
-    
-     private MijnTimer objMijnTimer = new MijnTimer(this);
-     private Timer timer = new Timer();
-     
-     public int counter = 1;
-    
-     public int racquetX, racquetY;
+    private  int xa, ya;
+    private  int step = 10;
+    private MijnTimer objMijnTimer = new MijnTimer(this);
+    private Timer timer = new Timer();
+    private int counter = 1;
+    private int racquetX, racquetY;
     
     public HelloTVXlet() {
         
@@ -62,8 +59,8 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         pauseKnop.setBackgroundMode(HVisible.BACKGROUND_FILL );
         pauseKnop.setVisible(false);
         pauseKnop.setFocusTraversal( null, null, startKnop, null );
-       
-
+      
+        
         scene.add(bckgr);
         scene.add(name);
         scene.add(startKnop);
@@ -87,6 +84,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         scene.popToFront(racquet);
         scene.popToFront(bal); 
      
+        this.startGame();
     }
     public void startGame(){
         
@@ -169,7 +167,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
             xa = step;
         }
        // bounce right
-        else if (bal.getX()+ xa > scene.getWidth())
+        else if (bal.getX()+ xa > scene.getWidth()-10)
             xa = -step;
         
        // bounce up
@@ -230,8 +228,8 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
             
             startKnop.setVisible(false);
             this.addElements();
-            timer.scheduleAtFixedRate(objMijnTimer, 0, 50);
-            this.startGame();
+            timer.scheduleAtFixedRate(objMijnTimer, 0, 30);
+            //this.startGame();
             
             pauseKnop.setVisible(false);
             pauseKnop.requestFocus();
