@@ -22,9 +22,10 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     private int balY;
     private int balX;
     private Random random;
-    private HStaticText level;
+    private Text levens;
     private HTextButton pauseKnop, startKnop;
     int xa, ya = 5;
+    int aantalLevens = 3;
     
      private MijnTimer objMijnTimer = new MijnTimer(this);
      private Timer timer = new Timer();
@@ -45,6 +46,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         random      = new Random();
         bckgr       = new MijnImage("bckgr.jpg", 0, 0); 
         name        = new Text(scene.getWidth()-150, 0, 200, 30, "Scores: 0");
+        levens      = new Text(scene.getWidth()-250, 0, 200, 30, "Levens: " + aantalLevens);
         blockjes    = new Block[70];
         Colors      = new Color[10];
         
@@ -77,9 +79,11 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         
         scene.add(bckgr);
         scene.add(name);
+        scene.add(levens);
         scene.add(startKnop);
         scene.add(pauseKnop);
         scene.popToFront(name);
+        scene.popToFront(levens);
         scene.popToFront(startKnop);
         scene.popToFront(pauseKnop);
    
@@ -168,9 +172,24 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
        // must change to IF COLLISION
        //else if(bal.getY() + ya > scene.getHeight()-50)
       if(rCollision())
+      {
            ya = -5;
+      }
        else if (bal.getY() + ya > scene.getHeight())
-           System.out.println("GAME OVER!");
+       {
+           aantalLevens--;
+           scene.remove(levens);
+           scene.add(levens);
+           scene.popToFront(levens);
+           if(aantalLevens == 0)
+           {
+               System.out.println("GAME OVER!");
+               //stop game?
+           }
+           else{
+               //replace ball at right positio
+           }
+       }
        // ball under the scene
       // else if(bal.getY() + ya > scene.getHeight())
       // System.out.println("GAME OVER");
@@ -180,7 +199,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
        
        bal.Verplaats(balX, balY);
        
-       for(int i = 0; i <= blockjes.length; i++)
+       /*for(int i = 0; i <= blockjes.length; i++)
        {   
                if(bal.getX() >= blockjes[i].getX() && bal.getX() <= (blockjes[i].getX() + blockjes[i].getWidth()))
                {
@@ -197,7 +216,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
                        scene.remove(blockjes[i]);
                    }
                }
-       }
+       }*/
     }
     
     public void moveRight(){
