@@ -61,6 +61,10 @@ public class Block extends HComponent{
         return this.blockH;
     }
     
+    public boolean isBlockVisible(){
+        return this.isAlive;
+    }
+    
     public void killBlock(){
         this.isAlive = false;
     }
