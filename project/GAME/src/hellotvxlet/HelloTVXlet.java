@@ -15,7 +15,8 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     private MijnImage bckgr;    
     private HScene scene;
     private Text name;
-    private Block racquet;
+    //private Block racquet;
+    private Racquet racquet;
     private Block[] blockjes;
     private Color[] Colors;
     private Bal bal;
@@ -92,9 +93,8 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         
         //controls
         bal       = new Bal(0, 0, scene.getWidth(), scene.getHeight());
-        racquet   = new Block(0, 548, scene.getWidth(), scene.getHeight(), 0, 5, 150, 20, Color.red);
         
-        
+        racquet = new Racquet(scene.getWidth()-150, 548, scene.getWidth(), scene.getHeight(), 0, 5, 150, 30, Color.orange);
         scene.add(racquet);
         scene.add(bal);
         scene.popToFront(racquet);
@@ -187,11 +187,10 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
        // bounce right
         else if (bal.getX()+ xa > scene.getWidth()-30)
             xa = -5;
-       
+        
        // bounce up
        if(bal.getY() + ya < 0)
            ya = 5;
-       
        // must change to IF COLLISION
        //else if(bal.getY() + ya > scene.getHeight()-50)
       if(rCollision())
@@ -264,12 +263,16 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     }
     public boolean rCollision(){
         
-        Rectangle r = new Rectangle(racquet.getX(), 548, 150, 20);  
+        Rectangle r = new Rectangle(racquet.getX(), 548, 150, 20);
         Rectangle b = new Rectangle(balX, balY, 30, 30);
         boolean collision = b.intersects(r);
         System.out.println("Racquet: "+racquet.getX()+" - "+racquet.getY()+" - "+racquet.getwidth()+" - "+racquet.getheight());
         System.out.println("BALL: "+balX+" - "+balY+" - "+bal.getwidth()+" - "+bal.getheight());
         System.out.println(r.getBounds());
         return collision; 
+    }
+    public boolean blockCollision(){
+        blockjes[1].getBounds().intersection(bal.getBounds());
+        return false;
     }
 }

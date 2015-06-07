@@ -36,7 +36,6 @@ public class Bal extends HComponent{
         
         g.setColor(new DVBColor(0, 255, 255, 255));
         g.fillOval(this.getXpos(), this.getYpos(), DIAMETER, DIAMETER);
-        
     }
    
     public int getXpos()
