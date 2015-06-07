@@ -68,4 +68,5 @@ public class Block extends HComponent{
     public void killBlock(){
         this.isAlive = false;
     }
+   
 }
