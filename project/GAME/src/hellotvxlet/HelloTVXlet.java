@@ -154,34 +154,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         
     }
     
-    public void callback(){
-        
-        
-       for(int i = 0; i < 64; ++i)
-       {
-         // Rectangle r1 = new Rectangle(blockjes[i].getXpos(), blockjes[i].getYpos(), blockjes[i].getwidth(), blockjes[i].getheight());
-         // Rectangle r2 = new Rectangle(bal.getXpos(), bal.getY(), bal.getwidth(), bal.getheight() );
-          
-   
-           /**if(bal.getXpos() >= blockjes[i].getXpos() && bal.getXpos() <= (blockjes[i].getXpos() + blockjes[i].getwidth()))
-           {
-               if(bal.getYpos() <= blockjes[i].getYpos() + blockjes[i].getheight())
-               {
-                   if(direction == "up")
-                   {
-                       direction = "down";
-                   }
-                   else
-                   {
-                       direction = "up";
-                   }
-                   blockjes[i].killBlock();
-                   scene.remove(blockjes[i]);
-               }
-               
-           }*/
-       }
-       
+    public void callback(){       
        // bounce left
         if(bal.getX()+ xa < 1){
             xa = 5;
@@ -206,6 +179,28 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
        balY = bal.getY() + ya;
        
        bal.Verplaats(balX, balY);
+       
+       for(int i = 0; i < blockjes.length; ++i)
+       {   
+           if(blockjes[i].isAlive)
+           {
+               if(bal.getX() >= blockjes[i].getX() && bal.getX() <= (blockjes[i].getX() + blockjes[i].getWidth()))
+               {
+                   if(bal.getY() <= blockjes[i].getY() + blockjes[i].getHeight())
+                   {
+                       if(bal.getY() + bal.getHeight() >= blockjes[i].getY()){
+                           ya = 5;
+                       }else
+                       {
+                           ya = -5;
+                       }
+                       
+                       blockjes[i].killBlock();
+                       scene.remove(blockjes[i]);
+                   }
+               }
+           }
+       }
     }
     
     public void moveRight(){
