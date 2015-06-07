@@ -15,7 +15,6 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     private MijnImage bckgr;    
     private HScene scene;
     private Text name;
-    //private Block racquet;
     private Racquet racquet;
     private Block[] blockjes;
     private Color[] Colors;
@@ -25,7 +24,8 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     private Random random;
     private HStaticText level;
     private HTextButton pauseKnop, startKnop;
-    int xa, ya = 5;
+    int xa, ya;
+    int step = 10;
     
      private MijnTimer objMijnTimer = new MijnTimer(this);
      private Timer timer = new Timer();
@@ -74,7 +74,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         pauseKnop.setBackground( new DVBColor(0, 0, 0, 179) );
         pauseKnop.setBackgroundMode(HVisible.BACKGROUND_FILL );
         pauseKnop.setVisible(false);
-        //pauseKnop.setFocusTraversal( null, null, startKnop, null );
+        pauseKnop.setFocusTraversal( null, null, startKnop, null );
         
         scene.add(bckgr);
         scene.add(name);
@@ -92,9 +92,8 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         startKnop.requestFocus();
         
         //controls
-        bal       = new Bal(0, 0, scene.getWidth(), scene.getHeight());
-        
-        racquet = new Racquet(scene.getWidth()-150, 548, scene.getWidth(), scene.getHeight(), 0, 5, 150, 30, Color.orange);
+        bal     = new Bal(0, 0, scene.getWidth(), scene.getHeight());
+        racquet = new Racquet( 270, 548, scene.getWidth(), scene.getHeight(), 0, 5, 150, 30, Color.orange);
         scene.add(racquet);
         scene.add(bal);
         scene.popToFront(racquet);
@@ -130,18 +129,26 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
               blockjes[i] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 70+72*(i-56), 172, 70, 20, randomColor);
             }
             
+            if(blockjes[i] != null){
             scene.add(blockjes[i]); 
             scene.popToFront(blockjes[i]);
+            }
             randomNumber = 0;
         }
-    };
+        
+    }
     
     public void startXlet() throws XletStateChangeException {
            
         scene.validate();
         scene.setVisible(true);
         
-        EventManager manager = EventManager.getInstance();
+        
+        
+    }
+    
+    public void addElements(){
+            EventManager manager = EventManager.getInstance();
 
         UserEventRepository repository = new UserEventRepository ("");
         
@@ -149,58 +156,55 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         repository.addKey(HRcEvent.VK_RIGHT);
         
         manager.addUserEventListener(this, repository);
+       }
+    public void callback(){
         
-    }
-    
-    public void callback(){       
+      for(int i = 0; i < 64; ++i){
+           
+           if(blockjes[i] != null && this.collision( blockjes[i])){
+               if(bal.getY() + ya < blockjes[i].getYpos()-5)
+                   ya = step;
+               
+               
+               // ball move
+               balX = bal.getX() + xa;
+               balY = bal.getY() + ya;
+               
+               bal.Verplaats(balX, balY);
+               scene.remove(blockjes[i]);
+       
+       }
+         
+
+       }
+       
        // bounce left
         if(bal.getX()+ xa < 1){
-            xa = 5;
+            xa = step;
         }
        // bounce right
-        else if (bal.getX()+ xa > scene.getWidth()-30)
-            xa = -5;
+        else if (bal.getX()+ xa > scene.getWidth()-10)
+            xa = -step;
         
        // bounce up
-       if(bal.getY() + ya < 0)
-           ya = 5;
-       // must change to IF COLLISION
-       //else if(bal.getY() + ya > scene.getHeight()-50)
-      if(rCollision())
-           ya = -5;
+       if(bal.getY() + ya < 1)
+           ya = step;
+
+       // collision with racquet
+      if(this.collision(null))
+           ya = -step;
        else if (bal.getY() + ya > scene.getHeight())
            System.out.println("GAME OVER!");
-       // ball under the scene
-      // else if(bal.getY() + ya > scene.getHeight())
-      // System.out.println("GAME OVER");
        
+       // ball move
        balX = bal.getX() + xa;
        balY = bal.getY() + ya;
        
        bal.Verplaats(balX, balY);
-       
-       for(int i = 0; i <= blockjes.length; i++)
-       {   
-               if(bal.getX() >= blockjes[i].getX() && bal.getX() <= (blockjes[i].getX() + blockjes[i].getWidth()))
-               {
-                   if(bal.getY() <= blockjes[i].getY() + blockjes[i].getHeight())
-                   {
-                       if(bal.getY() + bal.getHeight() >= blockjes[i].getY()){
-                           ya = 5;
-                       }else
-                       {
-                           ya = -5;
-                       }
-                       
-                       blockjes[i].killBlock();
-                       scene.remove(blockjes[i]);
-                   }
-               }
-       }
     }
     
     public void moveRight(){
-       if(racquetX < scene.getWidth()-105){
+       if(racquetX < scene.getWidth()-150){
            racquetX = racquet.getX();
            racquetX += 20;
            racquet.Verplaats(racquetX, racquet.getY());
@@ -208,7 +212,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
       
     }
     public void moveLeft(){
-       if(racquetX > 2){
+       if(racquetX > 5){
             racquetX = racquet.getX();
             racquetX-=20;
             racquet.Verplaats(racquetX, racquet.getY());       
@@ -239,9 +243,11 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         if(action.equals("START")){
             
             startKnop.setVisible(false);
+            this.addElements();
             timer.scheduleAtFixedRate(objMijnTimer, 0, 40);
             this.startGame();
-            pauseKnop.setVisible(true);
+            
+            pauseKnop.setVisible(false);
             pauseKnop.requestFocus();
             
         }
@@ -253,18 +259,20 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
          
         }
     }
-    public boolean rCollision(){
-        
+    public boolean collision(Block block){
+        boolean collision = false;
+        if(block != null){
+            Rectangle bl = new Rectangle(block.getXpos(), block.getYpos(), block.getWidth(), block.getheight());
+            Rectangle b = new Rectangle(balX, balY, 30, 30);
+            collision = bl.intersects(b);
+        }
+        else{
+            
         Rectangle r = new Rectangle(racquet.getX(), 548, 150, 20);
         Rectangle b = new Rectangle(balX, balY, 30, 30);
-        boolean collision = b.intersects(r);
-        System.out.println("Racquet: "+racquet.getX()+" - "+racquet.getY()+" - "+racquet.getwidth()+" - "+racquet.getheight());
-        System.out.println("BALL: "+balX+" - "+balY+" - "+bal.getwidth()+" - "+bal.getheight());
-        System.out.println(r.getBounds());
+        collision = b.intersects(r);
+        }
         return collision; 
     }
-    public boolean blockCollision(){
-        blockjes[1].getBounds().intersection(bal.getBounds());
-        return false;
-    }
+
 }
