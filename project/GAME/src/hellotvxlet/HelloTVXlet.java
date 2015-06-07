@@ -17,7 +17,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     private Text name;
     private Racquet racquet;
     private Block[] blockjes;
-    private Color[] Colors;
+    private Color[] colors;
     private Bal bal;
     private int balY;
     private int balX;
@@ -47,20 +47,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         bckgr       = new MijnImage("bckgr.jpg", 0, 0); 
         name        = new Text(scene.getWidth()-150, 0, 200, 30, "Scores: 0");
         blockjes    = new Block[70];
-        Colors      = new Color[10];
-        
-        //initiliaze colors
-        Colors[0] = Color.red;
-        Colors[1] = Color.blue;
-        Colors[2] = Color.yellow;
-        Colors[3] = Color.pink;
-        Colors[4] = Color.cyan;
-        Colors[5] = Color.gray;
-        Colors[6] = Color.orange;
-        Colors[7] = Color.magenta;
-        Colors[8] = Color.white;
-        Colors[9] = Color.green;
-
+        colors      = new Color[]{Color.red, Color.blue, Color.yellow, Color.pink, Color.cyan, Color.orange, Color.magenta, Color.white, Color.green, Color.gray };
         
         startKnop.setLocation(230, 300);
         startKnop.setSize(250, 50 );
@@ -75,7 +62,8 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         pauseKnop.setBackgroundMode(HVisible.BACKGROUND_FILL );
         pauseKnop.setVisible(false);
         pauseKnop.setFocusTraversal( null, null, startKnop, null );
-        
+       
+
         scene.add(bckgr);
         scene.add(name);
         scene.add(startKnop);
@@ -104,8 +92,8 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
         
         for(int i = 0; i<= 64; i++){
               
-              int randomNumber = random.nextInt(Colors.length);
-              Color randomColor = Colors[randomNumber];
+              int randomNumber = random.nextInt(colors.length);
+              Color randomColor = colors[randomNumber];
             
             if(i < 8){
                 blockjes[i] = new Block(0, 0, scene.getWidth(), scene.getHeight(), 70+72*i, 40, 70, 20, randomColor);
@@ -142,8 +130,6 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
            
         scene.validate();
         scene.setVisible(true);
-        
-        
         
     }
     
@@ -183,7 +169,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
             xa = step;
         }
        // bounce right
-        else if (bal.getX()+ xa > scene.getWidth()-10)
+        else if (bal.getX()+ xa > scene.getWidth())
             xa = -step;
         
        // bounce up
@@ -244,7 +230,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
             
             startKnop.setVisible(false);
             this.addElements();
-            timer.scheduleAtFixedRate(objMijnTimer, 0, 40);
+            timer.scheduleAtFixedRate(objMijnTimer, 0, 50);
             this.startGame();
             
             pauseKnop.setVisible(false);
