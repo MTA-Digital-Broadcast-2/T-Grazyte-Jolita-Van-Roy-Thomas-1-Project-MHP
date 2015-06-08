@@ -19,12 +19,12 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     private Block[] blockjes;
     private Color[] colors;
     private Bal bal;
+    int score = 0;
     private int balY;
     private int balX;
     private Random random;
     private Text levens;
     private HTextButton pauseKnop, startKnop;
-<<<<<<< HEAD
     int xa, ya = 5;
     int aantalLevens = 3;
     
@@ -34,14 +34,7 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
      public int counter = 1;
     
      public int racquetX, racquetY;
-=======
-    private  int xa, ya;
     private  int step = 10;
-    private MijnTimer objMijnTimer = new MijnTimer(this);
-    private Timer timer = new Timer();
-    private int counter = 1;
-    private int racquetX, racquetY;
->>>>>>> c88359406de1be932c661a90b0d83fe5b920f2e6
     
     public HelloTVXlet() {
         
@@ -159,23 +152,21 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
     public void callback(){
         
       for(int i = 0; i < 64; ++i){
-           
            if(blockjes[i] != null && this.collision( blockjes[i])){
-               if(bal.getY() + ya < blockjes[i].getYpos()-5)
-                   ya = step;
-               
-               
-               // ball move
-               balX = bal.getX() + xa;
-               balY = bal.getY() + ya;
-               
-               bal.Verplaats(balX, balY);
-               scene.remove(blockjes[i]);
-       
-       }
-         
-
-       }
+                   /*if(bal.getY() + ya < blockjes[i].getYpos()-5){*/
+               if(blockjes[i].isAlive){
+                       blockjes[i].killBlock();
+                       ya = -step;
+                       score += 5;
+                       scene.remove(blockjes[i]);
+                       scene.remove(name);
+                       name        = new Text(scene.getWidth()-150, 0, 200, 30, "Scores: " + score);
+                       scene.add(name);
+                       scene.popToFront(name);
+               }
+                   /*}*/
+           }
+      }
        
        // bounce left
         if(bal.getX()+ xa < 1){
@@ -186,17 +177,16 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
             xa = -step;
         
        // bounce up
-<<<<<<< HEAD
        if(bal.getY() + ya < 0)
-           ya = 5;
+           ya = step;
        
+      if(collision(null)){
+          ya = -step;
+      }
        // must change to IF COLLISION
        //else if(bal.getY() + ya > scene.getHeight()-50)
-      if(rCollision())
-      {
-           ya = -5;
-      }
-       else if (bal.getY() + ya > scene.getHeight())
+      
+       if (bal.getY() + ya > scene.getHeight())
        {
            aantalLevens--;
            scene.remove(levens);
@@ -211,47 +201,13 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
                //replace ball at right positio
            }
        }
-       // ball under the scene
-      // else if(bal.getY() + ya > scene.getHeight())
-      // System.out.println("GAME OVER");
-=======
-       if(bal.getY() + ya < 1)
-           ya = step;
-
-       // collision with racquet
-      if(this.collision(null))
-           ya = -step;
-       else if (bal.getY() + ya > scene.getHeight())
-           System.out.println("GAME OVER!");
->>>>>>> c88359406de1be932c661a90b0d83fe5b920f2e6
        
        // ball move
        balX = bal.getX() + xa;
        balY = bal.getY() + ya;
        
        bal.Verplaats(balX, balY);
-<<<<<<< HEAD
        
-       /*for(int i = 0; i <= blockjes.length; i++)
-       {   
-               if(bal.getX() >= blockjes[i].getX() && bal.getX() <= (blockjes[i].getX() + blockjes[i].getWidth()))
-               {
-                   if(bal.getY() <= blockjes[i].getY() + blockjes[i].getHeight())
-                   {
-                       if(bal.getY() + bal.getHeight() >= blockjes[i].getY()){
-                           ya = 5;
-                       }else
-                       {
-                           ya = -5;
-                       }
-                       
-                       blockjes[i].killBlock();
-                       scene.remove(blockjes[i]);
-                   }
-               }
-       }*/
-=======
->>>>>>> c88359406de1be932c661a90b0d83fe5b920f2e6
     }
     
     public void moveRight(){
@@ -318,10 +274,9 @@ public class HelloTVXlet implements Xlet, UserEventListener, HActionListener {
             collision = bl.intersects(b);
         }
         else{
-            
-        Rectangle r = new Rectangle(racquet.getX(), 548, 150, 20);
-        Rectangle b = new Rectangle(balX, balY, 30, 30);
-        collision = b.intersects(r);
+            Rectangle r = new Rectangle(racquet.getX(), 548, 150, 20);
+            Rectangle b = new Rectangle(balX, balY, 30, 30);
+            collision = b.intersects(r);
         }
         return collision; 
     }
